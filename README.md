@@ -6,7 +6,9 @@
 
 <br/>
 
-mysql8.0에서 sql_mode 기본값
+<h3>SQL 모드</h3>
+
+8.0에서 기본값
 
 <br/>
 
@@ -45,3 +47,56 @@ mysql8.0에서 sql_mode 기본값
 - TRANDITIONAL
   - STRICT_TRANS_TABLES나 STRICT_ALL_TABLES와 비슷하지만 더 엄격한 방법으로 SQL의 작동을 제어한다.
   - STRICT_TRANS_TABLES, STRICT_ALL_TABLES, NO_ZERO_DATE, ERROR_FOR_DIVISION_BY_ZERO, NO_ENGINE_SUBSTITUTION 모드의 조합
+
+<br/>
+
+<h3>11.1.2 영문 대소문자 구분</h3>
+
+<br/>
+
+mysql 서버는 설치된 운영체제에 따라 테이블 명의 대소문자를 구분한다.
+
+<br/>
+
+이 영향을 받지 않으려면 mysql 서버의 설정 파일에 lower_case_table_names 시스템 변수를 설정하면 된다.
+
+<br/>
+<br/>
+
+mysql 에서는 숫자 타입과 문자열 타입 간의 비교에서 숫자 타입이 우선이므로, 문자열 값을 숫자 값으로 변환하여 비교를 수행한다.
+
+<br/>
+
+```sql
+SELECT * FROM tab_test WHERE number_column='10001'; --- 1
+SELECT * FROM tab_test WHERE string_column=10001; --- 2
+```
+
+여기서 1번은 '10001'을 숫자 타입으로 자동 변환하여 비교하므로 성능에 영향이 별로 없다.
+
+<br/>
+
+그런데 2번은 string_column의 모든 문자열 값을 숫자로 변환해서 비교하므로 인덱스가 있더라도 이용하지 못해 성능에 좋지 않다.
+
+<br/>
+
+숫자 값으로 변환할 수 없는 값이 존재할 경우, 쿼리 자체가 실패할 수도 있다.
+
+<br/>
+
+<h3>날짜</h3>
+
+mysql에서는 정해진 날짜 포맷으로 표기하면 mysql 서버가 자동으로 DATE나 DATETIME 값으로 변환하기 때뭉네 복잡하게 STR_TO_DATE()같은 함수를 사용하지 않아도 된다.
+
+<br/>
+
+```sql
+SELECT * FROM dept_emp WHERE from_Date='2011-04-29';
+SELECT * FROM dept_emp WHERE from_Date=STR_TO_DATE('2011-04-29', '%Y-%m-%d');
+```
+
+두 쿼리의 차이는 없다.
+
+<h3>불리언</h3>
+
+BOOL이나 BOOLEAN 이라는 타입은 있지만 사실 이것은 TINYINT 타입에 대한 동의어이다.
