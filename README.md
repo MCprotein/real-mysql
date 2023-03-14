@@ -100,3 +100,118 @@ SELECT * FROM dept_emp WHERE from_Date=STR_TO_DATE('2011-04-29', '%Y-%m-%d');
 <h3>불리언</h3>
 
 BOOL이나 BOOLEAN 이라는 타입은 있지만 사실 이것은 TINYINT 타입에 대한 동의어이다.
+
+```sql
+CREATE TABLE tb_boolean (bool_value BOOLEAN);
+
+INSERT INTO tb_boolean VALUES (FALSE);
+SELECT * FROM tb_boolean WHERE bool_value=FALSE;
+SELECT * FROM tb_boolean WHERE bool_value=TRUE;
+```
+
+실제로 값을 조회해보면 0 또는 1 값이 조회된다.
+
+<br/>
+
+mysql은 C/C++ 언어처럼 TRUE와 FALSE를 1과 0에 매핑해서 사용하는 것이다.
+
+<br/>
+
+이 때 FALSE는 C/C++처럼 0이지만, TRUE는 C/C++과 다르게 1만 나타낸다.
+
+<br/>
+
+```sql
+CREATE TABLE tb_boolean (bool_value BOOLEAN);
+INSERT INTO tb_boolean VALUES (FALSE), (TRUE), (2), (3), (4);
+
+SELECT * FROM tb_boolean WHERE bool_value IN (FALSE, TRUE);
+```
+
+결과는 0, 1만 나온다.
+
+<br/>
+
+불리언 타입은 ENUM 타입으로 관리하는것이 더 좋을수도 있다.
+
+<br/>
+
+동등 비교는 = 와 <=>가 있다.
+
+<br/>
+
+=는 NULL에 대해서는 비교를 하지 못한다. 결과는 무조건 NULL.
+
+<br/>
+
+<=>는 NULL도 하나의 문자로 보고 비교할 수 있다. Null-Safe 비교 연산자라고 한다.
+
+<br/>
+
+```sql
+SELECT 1 = 1, NULL = NULL, 1 = NULL;
+SELECT 1 <=> 1, NULL <=> NULL, 1<=> NULL;
+```
+
+<br/>
+
+AND: &&
+OR: ||
+
+```sql
+SET sql_mode = 'PIPES_AS_CONCAT';
+SELECT 'abc' || 'def' AS concated_String;
+```
+
+PIPES_AS_CONCAT 설정을 하면 OR 로는 못쓰고 concat 용도로 사용할 수 있다.
+
+<br/>
+
+AND가 OR 보다 우선이다.
+
+<br/>
+<br/>
+
+REGEXO 연산자
+
+<br/>
+
+```sql
+SELECT 'abc' REGEXP '^[a-z]';
+```
+
+ <br/>
+
+^: 문자열의 시작을 표시. 일치하는 부분이 반드시 문자열의 제일 앞에 있어야 한다.
+
+<br/>
+
+$: 문자열의 끝을 표시. 일치하는 부분이 반드시 문자열의 제일 끝에 있어야 한다.
+
+<br/>
+
+[]: 문자 그룹을 표시. 대괄호는 문자열이 아니라 문자 하나와 일치하는지 확인 [x-z]라고 표현하면 x, y, z 중 하나인지 확인
+
+ <br/>
+
+(): 문자열 그룹을 표시. (xyz)라고 표현하면 'xyz'가 있는지 확인
+
+ <br/>
+
+|: abc|xyz 라고 하면 abc이거나 xyz인지 확인
+
+ <br/>
+
+.: 어떤 문자든지 1개의 문자를 표시. ... 이라고 표현하면 실제 문자의 값과 관계없이 3개의 문자로 구성된 문자열을 찾는다.
+
+  <br/>
+
+\*: 이 기호 앞에 표시된 정규 표현식이 0 또는 1번 이상 반복될 수 있다.
+
+   <br/>
+
++: 이 기호 앞에 표시된 정규 표현식이 1번 이상 반복될 수 있다.
+
+?: 이 기호 앞에 표시된 저규 표현식이 0 또는 1번만 올 수 있다.
+
+<br/>
